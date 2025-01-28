@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Альбоми</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Головна</a></li>
+                <li><a href="/about">Про проект</a></li>
+                <li><a href="/history">Історія гурту</a></li>
+                <li><a href="/albums">Альбоми</a></li>
+                {% if session.get('username') %}
+                <li><a href="/logout">Вихід</a></li>
+                {% else %}
+                <li><a href="/login">Вхід</a></li>
+                <li><a href="/register">Реєстрація</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Альбоми AESPA</h1>
+        <ul>
+            {% for album in albums %}
+            <li>
+                <h2>{{ album.title }}</h2>
+                <p>{{ album.description }}</p>
+                <p>Випущено: {{ album.release_date }}</p>
+                {% if session.get('username') %}
+                <a href="{{ url_for('edit_album', album_id=album.id) }}">Редагувати</a>
+                <form action="{{ url_for('delete_album', album_id=album.id) }}" method="POST" style="display:inline;">
+                    <button type="submit">Видалити</button>
+                </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if session.get('username') %}
+        <a href="/add_album">Додати новий альбом</a>
+        {% endif %}
+    </main>
+</body>
+</html>

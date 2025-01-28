@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Головна</a></li>
+                <li><a href="/about">Про проект</a></li>
+                <li><a href="/history">Історія гурту</a></li>
+                <li><a href="/albums">Альбоми</a></li>
+                {% if session.get('username') %}
+                <li><a href="/logout">Вихід</a></li>
+                {% else %}
+                <li><a href="/login">Вхід</a></li>
+                <li><a href="/register">Реєстрація</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Реєстрація</h1>
+        <form method="POST">
+            <label for="username">Логін</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Зареєструватися</button>
+        </form>
+        <p>Вже є акаунт? <a href="/login">Увійти</a></p>
+    </main>
+</body>
+</html>

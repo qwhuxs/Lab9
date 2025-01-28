@@ -1,0 +1,216 @@
+﻿/* Загальні стилі для всього сайту */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #2c2c2c; /* Темний фон для сторінки */
+    color: #808080; /* Світлий текст */
+    margin: 0;
+    padding: 0;
+}
+
+/* Заголовки */
+h1, h2 {
+    text-align: center; /* Відцентровано заголовки */
+    color: #f06292; /* Рожевий колір для заголовків */
+}
+
+/* Головне меню */
+header nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    background-color: #333; /* Темно-сірий фон для меню */
+    margin: 0;
+}
+
+    header nav ul li {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+        header nav ul li a {
+            color: #fff; /* Білий колір для посилань */
+            text-decoration: none;
+            font-size: 18px;
+            padding: 14px 20px;
+            display: block;
+        }
+
+            header nav ul li a:hover {
+                background-color: #e91e63; /* Рожевий при наведенні */
+                color: #fff;
+            }
+
+/* Основний вміст */
+main {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Параграфи */
+p {
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* Стили для посилань */
+a {
+    color: #e91e63; /* Рожевий колір для посилань */
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+/* Для кнопок на сторінках */
+button {
+    background-color: #e91e63; /* Рожевий колір для кнопок */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+    button:hover {
+        background-color: #c2185b; /* Темніший рожевий при наведенні */
+    }
+
+/* Стилі для форми авторизації та реєстрації */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+input[type="submit"] {
+    background-color: #e91e63; /* Рожевий колір для кнопки submit */
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    input[type="submit"]:hover {
+        background-color: #c2185b; /* Темніший рожевий при наведенні */
+    }
+
+/* Сторінка історії гурту */
+h2 {
+    margin-top: 30px;
+    font-size: 24px;
+    color: #f06292; /* Рожевий колір для підзаголовків */
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+/* Для сторінки альбому */
+.album-cover {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+.album-description {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-top: 20px;
+}
+
+/* Додаткові стилі для таблиць */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+th {
+    background-color: #e91e63; /* Рожевий фон для заголовків таблиць */
+    color: white;
+    text-align: left;
+}
+
+td {
+    text-align: left;
+}
+
+/* Стилі для кнопок на сторінці редагування альбомів */
+.edit-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+    .edit-buttons button {
+        background-color: #f39c12; /* Помаранчевий для кнопок редагування */
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .edit-buttons button:hover {
+            background-color: #e67e22; /* Темніший помаранчевий при наведенні */
+        }
+
+/* Сторінки з формами */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Відступи та маргін для кожного елемента */
+input, button {
+    padding: 12px;
+    font-size: 16px;
+}
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        width: 98%;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+/* Форма входу/реєстрації */
+form input[type="submit"] {
+    background-color: #e91e63; /* Рожевий колір для кнопки submit */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+    form input[type="submit"]:hover {
+        background-color: #c2185b; /* Темніший рожевий при наведенні */
+    }

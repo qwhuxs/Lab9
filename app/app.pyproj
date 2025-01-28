@@ -1,0 +1,168 @@
+import json
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+# Файли для зберігання даних
+ALBUMS_FILE = 'albums.json'
+USERS_FILE = 'users.json'
+
+
+# Завантаження альбомів із файлу
+def load_albums():
+    try:
+        with open(ALBUMS_FILE, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []  # Якщо файлу немає, повертаємо порожній список
+
+
+# Збереження альбомів у файл
+def save_albums(albums):
+    with open(ALBUMS_FILE, 'w') as file:
+        json.dump(albums, file, indent=4)
+
+
+# Завантаження користувачів із файлу
+def load_users():
+    try:
+        with open(USERS_FILE, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {"admin": {"password": "admin123", "role": "admin"}}  # Створюємо базового користувача
+
+
+# Рендеримо головну сторінку
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+# Рендеримо сторінку "Про проект"
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+# Рендеримо сторінку "Історія гурту"
+@app.route('/history')
+def history():
+    return render_template('history.html')
+
+
+# Сторінка альбомів
+@app.route('/albums')
+def albums():
+    albums = load_albums()
+    return render_template('album.html', albums=albums)
+
+
+# Реєстрація нового користувача
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        
+        if username in users:
+            flash('Користувач вже існує!')
+            return redirect(url_for('register'))
+        
+        users[username] = {"password": password, "role": "user"}
+        
+        with open(USERS_FILE, 'w') as file:
+            json.dump(users, file, indent=4)
+        
+        flash('Реєстрація успішна!')
+        return redirect(url_for('login'))
+    
+    return render_template('register.html')
+
+
+# Вхід користувача
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+
+        if username in users and users[username]['password'] == password:
+            session['username'] = username
+            flash('Вхід успішний!')
+            return redirect(url_for('index'))
+        else:
+            flash('Невірний логін або пароль!')
+            return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+
+# Вихід користувача
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('Ви вийшли з акаунту!')
+    return redirect(url_for('index'))
+
+
+# Сторінка редагування альбому
+@app.route('/edit_album/<int:album_id>', methods=['GET', 'POST'])
+def edit_album(album_id):
+    albums = load_albums()
+    album = next((album for album in albums if album['id'] == album_id), None)
+    
+    if album is None:
+        flash('Альбом не знайдено!')
+        return redirect(url_for('albums'))
+
+    if request.method == 'POST':
+        album['title'] = request.form['title']
+        album['description'] = request.form['description']
+        album['release_date'] = request.form['release_date']
+        
+        save_albums(albums)
+        flash('Альбом оновлено!')
+        return redirect(url_for('albums'))
+
+    return render_template('edit_album.html', album=album)
+
+
+# Додавання нового альбому
+@app.route('/add_album', methods=['GET', 'POST'])
+def add_album():
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        release_date = request.form['release_date']
+        
+        albums = load_albums()
+        new_album = {
+            'id': len(albums) + 1,
+            'title': title,
+            'description': description,
+            'release_date': release_date
+        }
+        albums.append(new_album)
+        save_albums(albums)
+        flash('Альбом додано!')
+        return redirect(url_for('albums'))
+
+    return render_template('add_album.html')
+
+
+# Видалення альбому
+@app.route('/delete_album/<int:album_id>', methods=['POST'])
+def delete_album(album_id):
+    albums = load_albums()
+    albums = [album for album in albums if album['id'] != album_id]
+    save_albums(albums)
+    flash('Альбом видалено!')
+    return redirect(url_for('albums'))
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
+

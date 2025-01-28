@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Про проект</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Головна</a></li>
+                <li><a href="/about">Про проект</a></li>
+                <li><a href="/history">Історія гурту</a></li>
+                <li><a href="/albums">Альбоми</a></li>
+                {% if session.get('username') %}
+                <li><a href="/logout">Вихід</a></li>
+                {% else %}
+                <li><a href="/login">Вхід</a></li>
+                <li><a href="/register">Реєстрація</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Про проект</h1>
+        <p>Цей сайт присвячений популярному музичному гурту AESPA. Тут ви знайдете всі новини про їхні альбоми та історію.</p>
+        <p>Відвідуйте нас, щоб бути в курсі всіх подій та дізнаватися більше про улюблених артистів.</p>
+    </main>
+</body>
+</html>

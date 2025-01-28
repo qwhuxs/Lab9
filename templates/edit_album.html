@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редагувати альбом</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Головна</a></li>
+                <li><a href="/about">Про проект</a></li>
+                <li><a href="/history">Історія гурту</a></li>
+                <li><a href="/albums">Альбоми</a></li>
+                {% if session.get('username') %}
+                <li><a href="/logout">Вихід</a></li>
+                {% else %}
+                <li><a href="/login">Вхід</a></li>
+                <li><a href="/register">Реєстрація</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Редагування альбому: {{ album.title }}</h1>
+        <form method="POST">
+            <label for="title">Назва альбому</label>
+            <input type="text" id="title" name="title" value="{{ album.title }}" required>
+
+            <label for="description">Опис</label>
+            <textarea id="description" name="description" required>{{ album.description }}</textarea>
+
+            <label for="release_date">Дата випуску</label>
+            <input type="date" id="release_date" name="release_date" value="{{ album.release_date }}" required>
+
+            <button type="submit">Оновити альбом</button>
+        </form>
+    </main>
+</body>
+</html>

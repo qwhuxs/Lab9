@@ -1,0 +1,10 @@
+{
+    "admin": {
+        "password": "admin123",
+        "role": "admin"
+    },
+    "vtk241_kai": {
+        "password": "2662356",
+        "role": "user"
+    }
+}
