@@ -12,17 +12,27 @@ USERS_FILE = 'users.json'
 # Клас для роботи з альбомами
 class AlbumManager:
     @staticmethod
-    def load_albums():
+    def load_file(file_path, default_data=None):
+        """Завантажує дані з JSON-файлу, якщо файл існує та не пошкоджений."""
         try:
-            with open(ALBUMS_FILE, 'r') as file:
+            with open(file_path, 'r') as file:
                 return json.load(file)
-        except FileNotFoundError:
-            return []  # Якщо файлу немає, повертаємо порожній список
+        except (FileNotFoundError, json.JSONDecodeError):
+            return default_data if default_data is not None else []
+
+    @staticmethod
+    def save_file(file_path, data):
+        """Зберігає дані у JSON-файл."""
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+
+    @staticmethod
+    def load_albums():
+        return AlbumManager.load_file(ALBUMS_FILE, default_data=[])
 
     @staticmethod
     def save_albums(albums):
-        with open(ALBUMS_FILE, 'w') as file:
-            json.dump(albums, file, indent=4)
+        AlbumManager.save_file(ALBUMS_FILE, albums)
 
     @staticmethod
     def get_album_by_id(album_id):
@@ -51,23 +61,31 @@ class AlbumManager:
 # Клас для роботи з користувачами
 class UserManager:
     @staticmethod
-    def load_users():
+    def load_file(file_path, default_data=None):
         try:
-            with open(USERS_FILE, 'r') as file:
+            with open(file_path, 'r') as file:
                 return json.load(file)
-        except FileNotFoundError:
-            return {"admin": {"password": "admin123", "role": "admin"}}  # Створюємо базового користувача
+        except (FileNotFoundError, json.JSONDecodeError):
+            return default_data if default_data is not None else []
+
+    @staticmethod
+    def save_file(file_path, data):
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+
+    @staticmethod
+    def load_users():
+        return UserManager.load_file(USERS_FILE, default_data={"admin": {"password": "admin123", "role": "admin"}})
 
     @staticmethod
     def save_users(users):
-        with open(USERS_FILE, 'w') as file:
-            json.dump(users, file, indent=4)
+        UserManager.save_file(USERS_FILE, users)
 
     @staticmethod
     def register_user(username, password):
         users = UserManager.load_users()
         if username in users:
-            return False  # Користувач вже існує
+            return False  
         users[username] = {"password": password, "role": "user"}
         UserManager.save_users(users)
         return True
