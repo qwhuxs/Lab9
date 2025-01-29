@@ -7,22 +7,59 @@ app.secret_key = 'your_secret_key'
 # Файли для зберігання даних
 ALBUMS_FILE = 'albums.json'
 USERS_FILE = 'users.json'
+ID_FILE = 'id.json'  # Файл для зберігання останнього використаного ID
+
+
+# Клас для керування унікальними ідентифікаторами
+class IDManager:
+    @staticmethod
+    def load_id():
+        """Завантажує останній використаний ідентифікатор з файлу."""
+        try:
+            with open(ID_FILE, 'r') as file:
+                return json.load(file)['last_id']
+        except (FileNotFoundError, json.JSONDecodeError):
+            return 0  # Якщо файлу немає або дані пошкоджені, починаємо з 0
+
+    @staticmethod
+    def save_id(last_id):
+        """Зберігає останній використаний ідентифікатор в файл."""
+        with open(ID_FILE, 'w') as file:
+            json.dump({"last_id": last_id}, file, indent=4)
+
+    @staticmethod
+    def get_next_id():
+        """Отримує наступний унікальний ідентифікатор та оновлює останній використаний."""
+        current_id = IDManager.load_id()
+        next_id = current_id + 1
+        IDManager.save_id(next_id)  # Оновлюємо останній використаний ID
+        return next_id
 
 
 # Клас для роботи з альбомами
 class AlbumManager:
     @staticmethod
-    def load_albums():
+    def load_file(file_path, default_data=None):
+        """Завантажує дані з JSON-файлу, якщо файл існує та не пошкоджений."""
         try:
-            with open(ALBUMS_FILE, 'r') as file:
+            with open(file_path, 'r') as file:
                 return json.load(file)
-        except FileNotFoundError:
-            return []  # Якщо файлу немає, повертаємо порожній список
+        except (FileNotFoundError, json.JSONDecodeError):
+            return default_data if default_data is not None else []
+
+    @staticmethod
+    def save_file(file_path, data):
+        """Зберігає дані у JSON-файл."""
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+
+    @staticmethod
+    def load_albums():
+        return AlbumManager.load_file(ALBUMS_FILE, default_data=[])
 
     @staticmethod
     def save_albums(albums):
-        with open(ALBUMS_FILE, 'w') as file:
-            json.dump(albums, file, indent=4)
+        AlbumManager.save_file(ALBUMS_FILE, albums)
 
     @staticmethod
     def get_album_by_id(album_id):
@@ -39,7 +76,7 @@ class AlbumManager:
     def add_album(title, description, release_date):
         albums = AlbumManager.load_albums()
         new_album = {
-            'id': len(albums) + 1,
+            'id': IDManager.get_next_id(),  # Використовуємо IDManager для унікальних ID
             'title': title,
             'description': description,
             'release_date': release_date
@@ -51,17 +88,27 @@ class AlbumManager:
 # Клас для роботи з користувачами
 class UserManager:
     @staticmethod
-    def load_users():
+    def load_file(file_path, default_data=None):
+        """Завантажує дані з JSON-файлу, якщо файл існує та не пошкоджений."""
         try:
-            with open(USERS_FILE, 'r') as file:
+            with open(file_path, 'r') as file:
                 return json.load(file)
-        except FileNotFoundError:
-            return {"admin": {"password": "admin123", "role": "admin"}}  # Створюємо базового користувача
+        except (FileNotFoundError, json.JSONDecodeError):
+            return default_data if default_data is not None else []
+
+    @staticmethod
+    def save_file(file_path, data):
+        """Зберігає дані у JSON-файл."""
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
+
+    @staticmethod
+    def load_users():
+        return UserManager.load_file(USERS_FILE, default_data={"admin": {"password": "admin123", "role": "admin"}})
 
     @staticmethod
     def save_users(users):
-        with open(USERS_FILE, 'w') as file:
-            json.dump(users, file, indent=4)
+        UserManager.save_file(USERS_FILE, users)
 
     @staticmethod
     def register_user(username, password):
